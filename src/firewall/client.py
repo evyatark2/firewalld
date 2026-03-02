@@ -986,6 +986,7 @@ class FirewallClientPolicySettings:
             "egress_zones": [],
             "forward_ports": [],
             "icmp_blocks": [],
+            "icmp_block_inversion": False,
             "ingress_zones": [],
             "masquerade": False,
             "ports": [],
@@ -1004,6 +1005,7 @@ class FirewallClientPolicySettings:
             "s",
             "(ssss)",
             "s",
+            "b",
             "s",
             "b",
             "(ss)",
@@ -1212,6 +1214,32 @@ class FirewallClientPolicySettings:
     @handle_exceptions
     def queryIcmpBlock(self, icmptype):
         return icmptype in self.settings["icmp_blocks"]
+
+    @handle_exceptions
+    def getIcmpBlockInversion(self):
+        return self.settings["icmp-block-inversion"]
+
+    @handle_exceptions
+    def setIcmpBlockInversion(self, flag):
+        self.settings["icmp-block-inversion"] = flag
+
+    @handle_exceptions
+    def addIcmpBlockInversion(self):
+        if not self.settings["icmp-block-inversion"]:
+            self.settings["icmp-block-inversion"] = True
+        else:
+            raise FirewallError(errors.ALREADY_ENABLED, "icmp-block-inversion")
+
+    @handle_exceptions
+    def removeIcmpBlockInversion(self):
+        if self.settings["icmp-block-inversion"]:
+            self.settings["icmp-block-inversion"] = False
+        else:
+            raise FirewallError(errors.NOT_ENABLED, "icmp-block-inversion")
+
+    @handle_exceptions
+    def queryIcmpBlockInversion(self):
+        return self.settings["icmp-block-inversion"]
 
     @handle_exceptions
     def getMasquerade(self):
